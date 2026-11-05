@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BRX STORE — Digital Marketplace</title>
+<style>
+:root{--bg:#080810;--panel:#121220;--line:#29243b;--purple:#8b22ff;--purple2:#b45cff;--text:#f5f2ff;--muted:#aaa4bd}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#211039 0,#080810 42%);color:var(--text);font:15px Inter,system-ui,Arial}
+header{position:sticky;top:0;background:#090911eF;border-bottom:1px solid var(--line);padding:14px 5%;display:flex;align-items:center;justify-content:space-between;z-index:3;gap:12px}
+.logo{font-size:26px;font-weight:900;letter-spacing:1px;color:#fff}.logo span{color:var(--purple2)}
+nav{display:flex;gap:10px;align-items:center}button,.btn{border:0;border-radius:10px;padding:11px 16px;background:linear-gradient(100deg,#6814d8,#a52bff);color:white;font-weight:700;cursor:pointer;text-decoration:none}
+button.secondary{background:#20182f;border:1px solid #483065}button.danger{background:#7d2436}input,textarea,select{width:100%;background:#090912;border:1px solid #332b46;border-radius:9px;padding:11px;color:white;margin:6px 0 12px}label{color:#c9c2d9;font-size:13px}
+.wrap{max-width:1180px;margin:auto;padding:28px 18px}.hero{border:1px solid #382454;border-radius:20px;padding:44px 30px;background:linear-gradient(115deg,#160d29,#090910 65%);display:flex;justify-content:space-between;align-items:center;gap:20px;overflow:hidden}
+.hero h1{font-size:clamp(35px,6vw,68px);margin:0;line-height:1.02}.hero h1 span{color:#a94cff}.hero p{color:var(--muted);max-width:500px}.tag{color:#cda5ff;font-weight:800;letter-spacing:2px}
+.sectionhead{display:flex;justify-content:space-between;align-items:center;margin:32px 0 15px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px}
+.card,.panel{background:linear-gradient(145deg,#151322,#0e0e17);border:1px solid var(--line);border-radius:15px;padding:17px}
+.product-art{height:120px;border-radius:11px;background:radial-gradient(circle,#5c1aa0,#171022 70%);display:grid;place-items:center;font-size:29px;font-weight:900;color:#d9b2ff;margin-bottom:14px}
+.price{font-size:20px;color:#c56cff;font-weight:900}.muted{color:var(--muted)}.pill{display:inline-block;background:#20152e;color:#cfa9ff;padding:5px 9px;border-radius:99px;font-size:12px}
+footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:var(--muted);margin-top:35px}
+.hidden{display:none!important}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.admin-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px}.keybox{height:140px}.row{display:flex;gap:10px}.row>*{flex:1}
+.notice{border:1px solid #5b3a87;background:#211433;padding:12px;border-radius:10px;color:#dfc8ff;margin:12px 0}
+@media(max-width:650px){header{padding:12px 4%;flex-wrap:wrap}.hero{padding:28px 20px}.admin-layout{grid-template-columns:1fr}.row{flex-direction:column}}
+</style></head>
+<body>
+<header><div class="logo">♛ BRX <span>STORE</span></div><nav><button class="secondary" onclick="showStore()">Store</button><button onclick="openAdmin()">Dashboard Seller</button></nav></header>
+<main class="wrap" id="store">
+<section class="hero"><div><div class="tag">FAST • SIMPLE • DIGITAL</div><h1>BRX <span>STORE</span></h1><p>Digital marketplace untuk kebutuhan gaming dan produk digital. Pilih produk, cek stok, dan ikuti instruksi pembelian.</p><button onclick="document.querySelector('#catalog').scrollIntoView({behavior:'smooth'})">Lihat Produk ↓</button></div><div style="font-size:100px;color:#8c35ff;text-shadow:0 0 40px #781bff">⚡</div></section>
+<div class="sectionhead"><div><h2 style="margin:0">Produk Unggulan</h2><small class="muted">Produk tersedia akan tampil di sini</small></div></div>
+<div class="grid" id="catalog"></div>
+<div class="notice">Demo starter: tombol beli belum memproses pembayaran. Integrasi payment gateway dan server diperlukan agar transaksi serta pengiriman key aman.</div>
+</main>
+<main class="wrap hidden" id="admin">
+<h1>Dashboard Seller <span style="color:#a94cff">BRX</span></h1><p class="muted">Kelola katalog dan stok key dari panel ini.</p>
+<div class="tabs"><button onclick="tab('products')">Produk</button><button class="secondary" onclick="tab('stock')">Stok Key</button><button class="secondary" onclick="tab('orders')">Transaksi (demo)</button><button class="secondary" onclick="showStore()">← Lihat Store</button></div>
+<section id="productsTab" class="admin-layout">
+<div class="panel"><h3>Tambah / Edit Produk</h3><input id="pid" type="hidden"><label>Nama produk</label><input id="pname" placeholder="Contoh: XREG 30 Days"><label>Harga (Rp)</label><input id="pprice" type="number" placeholder="100000"><label>Deskripsi</label><textarea id="pdesc" placeholder="Keterangan produk"></textarea><button onclick="saveProduct()">Simpan Produk</button><button class="secondary" onclick="clearForm()">Reset</button></div>
+<div class="panel"><h3>Daftar Produk</h3><div id="productList"></div></div>
+</section>
+<section id="stockTab" class="hidden admin-layout">
+<div class="panel"><h3>Tambah stok key</h3><label>Pilih produk</label><select id="stockProduct"></select><label>Tempel key (satu key per baris)</label><textarea id="keys" class="keybox" placeholder="KEY-XXXX&#10;KEY-YYYY&#10;KEY-ZZZZ"></textarea><button onclick="addKeys()">Masukkan Stok</button><p class="muted">Key disimpan di browser ini untuk demo; belum aman untuk toko live.</p></div>
+<div class="panel"><h3>Ringkasan stok</h3><div id="stockList"></div></div>
+</section>
+<section id="ordersTab" class="hidden panel"><h3>Transaksi</h3><p class="muted">Belum ada transaksi. Checkout real membutuhkan backend dan payment gateway.</p></section>
+</main>
+<footer>© 2026 BRX STORE • Digital Marketplace</footer>
+<script>
+const get=(k,d=[])=>JSON.parse(localStorage.getItem(k)||JSON.stringify(d));
+const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+let products=get('brx_products',[]);
+let stocks=get('brx_stocks',{});
+function saveAll(){set('brx_products',products);set('brx_stocks',stocks)}
+function render(){let c=document.getElementById('catalog');c.innerHTML=products.map(p=>`<article class="card"><div class="product-art">⚡ ${esc(p.name)}</div><span class="pill">${(stocks[p.id]||[]).length} key tersedia</span><h3>${esc(p.name)}</h3><p class="muted">${esc(p.desc||'Produk digital BRX STORE')}</p><div class="price">${rupiah(p.price)}</div><button style="width:100%;margin-top:12px" onclick="alert('Demo: checkout belum aktif. Hubungkan payment gateway + backend untuk transaksi nyata.')">Beli Sekarang</button></article>`).join('')||'<div class="panel muted">Belum ada produk. Tambahkan dari Dashboard Seller.</div>';renderAdmin()}
+function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function rupiah(n){return 'Rp '+Number(n||0).toLocaleString('id-ID')}
+function showStore(){document.getElementById('store').classList.remove('hidden');document.getElementById('admin').classList.add('hidden');render()}
+function openAdmin(){document.getElementById('store').classList.add('hidden');document.getElementById('admin').classList.remove('hidden');renderAdmin()}
+function tab(t){['products','stock','orders'].forEach(x=>{document.getElementById(x+'Tab').classList.toggle('hidden',x!==t)});renderAdmin()}
+function clearForm(){pid.value='';pname.value='';pprice.value='';pdesc.value=''}
+function saveProduct(){let name=pname.value.trim(),price=Number(pprice.value);if(!name||price<=0)return alert('Isi nama dan harga dengan benar.');let id=pid.value||('p'+Date.now());let obj={id,name,price,desc:pdesc.value};let i=products.findIndex(x=>x.id===id);if(i<0)products.push(obj);else products[i]=obj;stocks[id]=stocks[id]||[];saveAll();clearForm();render()}
+function editProduct(id){let p=products.find(x=>x.id===id);pid.value=p.id;pname.value=p.name;pprice.value=p.price;pdesc.value=p.desc||'';tab('products')}
+function deleteProduct(id){if(confirm('Hapus produk? Stok key juga akan dihapus.')){products=products.filter(p=>p.id!==id);delete stocks[id];saveAll();render()}}
+function renderAdmin(){productList.innerHTML=products.map(p=>`<div class="panel" style="margin:8px 0"><b>${esc(p.name)}</b> · ${rupiah(p.price)}<br><small>${(stocks[p.id]||[]).length} key</small><div class="row" style="margin-top:8px"><button class="secondary" onclick="editProduct('${p.id}')">Edit</button><button class="danger" onclick="deleteProduct('${p.id}')">Hapus</button></div></div>`).join('')||'<p class="muted">Belum ada produk.</p>';stockProduct.innerHTML=products.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');stockList.innerHTML=products.map(p=>`<p><b>${esc(p.name)}</b>: ${(stocks[p.id]||[]).length} key</p>`).join('')||'Belum ada produk'}
+function addKeys(){let id=stockProduct.value,arr=keys.value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(!id||!arr.length)return alert('Pilih produk dan tempel key.');stocks[id]=stocks[id]||[];let existing=new Set(Object.values(stocks).flat());let fresh=arr.filter(k=>!existing.has(k));stocks[id].push(...fresh);saveAll();keys.value='';render();alert(`${fresh.length} key ditambahkan. ${arr.length-fresh.length} duplikat dilewati.`)}
+render();
+</script></body></html>
